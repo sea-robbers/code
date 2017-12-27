@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <!-- dragFn(父元素, top子元素)  -->
+    <script>
+        function dragFn(Pelement, Celemen) {
+            // 拖拽，拉伸功能
+            $(document).mousemove(function (e) {
+                if (!!this.move) {
+
+                    var posix = !document.move_target ? { 'x': 0, 'y': 0 } : document.move_target.posix,
+                        callback = document.call_down || function () {
+                            var y = e.pageX - posix.x <= 0 ? 0 : e.pageX - posix.x;
+                            var docY = $(document).height() - Pelement.height();
+                            if (e.pageY - posix.y <= docY ? 0 : e.pageY - posix.y) {
+                                y = docY;
+                            } else {
+                                y = e.pageY - posix.y <= 0 ? 0 : e.pageY - posix.y;
+                            }
+
+                            var x = e.pageX - posix.x <= 0 ? 0 : e.pageX - posix.x;
+                            var docX = $(document).width() - Pelement.width();
+                            if (e.pageX - posix.x <= docX ? 0 : e.pageX - posix.x) {
+                                x = docX;
+                            } else {
+                                x = e.pageX - posix.x <= 0 ? 0 : e.pageX - posix.x;
+                            }
+
+                            $(this.move_target).css({
+                                'top': y,
+                                'left': x,
+                            });
+                        };
+
+                    callback.call(this, e, posix);
+                    // 这里判断了 top 值为 0 的时候，不让再往上拖了
+                }
+            }).mouseup(function (e) {
+                if (!!this.move) {
+                    var callback = document.call_up || function () { };
+                    callback.call(this, e);
+                    $.extend(this, {
+                        'move': false,
+                        'move_target': null,
+                        'call_down': false,
+                        'call_up': false
+                    });
+                }
+            });
+
+            var $box = Celemen.mousedown(function (e) {
+                var $p = $(this).parent();
+                var $pp = $p[0];
+                var offset = $p.offset();
+                $pp.posix = { 'x': e.pageX - offset.left, 'y': e.pageY - offset.top };
+                $.extend(document, { 'move': true, 'move_target': $pp });
+
+            });
+            Pelement.bind(
+                {
+                    'mousemove': function (e) {
+                        $(this).css({ cursor: "default" });
+                        var offset = $(this).offset(), resize = true;
+                        var x = e.clientX, y = e.clientY, t = offset.top, l = offset.left, w = $(this).width(), h = $(this).height(), ww = $('.homePage-detailed-top').height(), b = 10;
+                        if (x < (l + b) && y > (t + ww) && y < (t + h - b)) {
+                            $(this).css({ cursor: "w-resize" });
+                            $(this).unbind("mousedown").bind({
+                                "mousedown": function (e) {
+                                    var $p = $(this);
+                                    var posix = {
+                                        'w': $p.width(),
+                                        'h': $p.height(),
+                                        'x': e.pageX,
+                                        'y': e.pageY
+                                    };
+
+                                    $.extend(document, {
+                                        'move': true, 'call_down': function (e) {
+                                            $p.css({
+                                                'width': Math.max(800, posix.x - e.pageX + posix.w),
+                                                'left': Math.max(0, e.pageX)
+                                            });
+                                        },
+
+                                    });
+                                }
+                            });
+                        } else if (x < (l + w) && x > (l + w - b) && y > (t + ww) && y < (t + h - b)) {
+                            $(this).css({ cursor: "e-resize" });
+                            $(this).unbind("mousedown").bind({
+                                "mousedown": function (e) {
+                                    var $p = $(this);
+                                    var posix = {
+                                        'w': $p.width(),
+                                        'x': e.pageX
+                                    };
+                                    resizeBox($p, posix, e);
+                                }
+                            });
+                        } else if (y < (t + h) && y > (t + h - b) && x > (l + b) && x < (l + w - b)) {
+                            $(this).css({ cursor: "s-resize" });
+                            $(this).unbind("mousedown").bind({
+                                "mousedown": function (e) {
+                                    var $p = $(this);
+                                    var posix = {
+                                        'h': $p.height(),
+                                        'y': e.pageY
+                                    };
+                                    resizeBox($p, posix, e);
+
+                                    var is;
+                                    is = setInterval(function () {
+                                        $('.homePage-detailed-scroll').height($p.height() - 65)
+                                    }, 20)
+
+
+                                    $(this).on('mouseup', function () {
+                                        clearInterval(is);
+                                    })
+
+                                }
+                            });
+                        } else if (x < (l + b) && y > (t + h - b) && y < (t + h)) {
+                            $(this).css({ cursor: "sw-resize" });
+                            $(this).unbind("mousedown").bind({
+                                "mousedown": function (e) {
+                                    var $p = $(this);
+                                    var posix = {
+                                        'w': $p.width(),
+                                        'h': $p.height(),
+                                        'x': e.pageX,
+                                        'y': e.pageY
+                                    };
+
+                                    $.extend(document, {
+                                        'move': true, 'call_down': function (e) {
+                                            $p.css({
+                                                'width': Math.max(800, posix.x - e.pageX + posix.w),
+                                                'height': Math.max(542, e.pageY - posix.y + posix.h),
+                                                'left': Math.max(300, e.pageX)
+                                            });
+                                        }
+                                    });
+
+                                    var isw;
+                                    isw = setInterval(function () {
+                                        $('.homePage-detailed-scroll').height($p.height() - 65);
+                                    }, 0)
+
+
+                                    $(this).on('mouseup', function () {
+                                        clearInterval(isw);
+                                    })
+                                }
+                            });
+                        } else if (y < (t + h) && y > (t + h - b) && x < (l + w) && x > (l + w - b)) {
+                            $(this).css({ cursor: "se-resize" });
+                            $(this).unbind("mousedown").bind({
+                                "mousedown": function (e) {
+                                    var $p = $(this);
+                                    var posix = {
+                                        'w': $p.width(),
+                                        'h': $p.height(),
+                                        'x': e.pageX,
+                                        'y': e.pageY
+                                    };
+                                    $.extend(document, {
+                                        'move': true, 'call_down': function (e) {
+                                            $p.css({
+                                                'width': Math.max(800, e.pageX - posix.x + posix.w),
+                                                'height': Math.max(542, e.pageY - posix.y + posix.h)
+                                            });
+                                        }
+                                    });
+
+                                    var ise;
+                                    ise = setInterval(function () {
+                                        $('.homePage-detailed-scroll').height($p.height() - 65)
+                                    }, 0)
+
+
+                                    $(this).on('mouseup', function () {
+                                        clearInterval(ise);
+                                    })
+                                }
+                            });
+                        } else if (y < (t + ww) && x > l && x < (l + w)) {
+                            $(this).css({ cursor: "move" });
+                            $(this).unbind("mousedown");
+                        }
+                    },
+                    "mouseup": function () {
+                        $(this).unbind("mousedown");
+                    }
+                });
+            function resizeBox($p, posix, e) {
+                $.extend(document, {
+                    'move': true, 'call_down': function (e) {
+                        $p.css({
+                            'width': Math.max(800, e.pageX - posix.x + posix.w),
+                            'height': Math.max(542, e.pageY - posix.y + posix.h)
+                        });
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>

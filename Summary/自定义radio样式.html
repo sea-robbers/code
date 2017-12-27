@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .content_two .title {
+            height: 42px;
+            width: 93px;
+            float: left;
+            padding-top: 5px;
+            color: #333;
+            padding-left: 23px;
+        }
+
+        .content_two .sh {
+            display: inline-block;
+            width: 185px;
+        }
+
+        input[type="radio"] {
+            opacity: 0;
+            margin-left: -10px;
+        }
+
+        .content_two .abroad {
+            width: 22px;
+            height: 22px;
+            border: 1px solid #34394a;
+            position: relative;
+            display: inline-block;
+            border-radius: 50%;
+            top: 7px;
+            right: 8px;
+            cursor: pointer;
+        }
+
+        .content_two .within {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            position: absolute;
+            background-color: #2b99ff;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .content_two .lb {
+            color: #333;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+
+
+    <div class="content_two">
+        <p>
+            <span class="sh">查询关键词位置限定</span>
+            <input type="radio" name='sex' id="ado_one" checked>
+            <div></div>
+            <label class="lb" for="ado_one"><div class="abroad"><span class="within"></span></div>不限</label>
+            <input type="radio" name='sex' id="ado_two">
+            <label class="lb" for="ado_two"><div class="abroad"><span></span></div>菜单</label>
+            <input type="radio" name='sex' id="ado_three">
+            <label class="lb" for="ado_three"><div class="abroad"><span></span></div>标题</label>
+            <input type="radio" name='sex' id="ado_four">
+            <label class="lb" for="ado_four"><div class="abroad"><span></span></div>内容</label>
+        </p>
+    </div>
+    <script src='./jquery/dist/jquery.min.js'></script>
+    <script>
+        $('.lb').on('click', function () {
+            $('span').removeClass('within')
+            $(this).find('span').toggleClass('within')
+
+        });
+
+    </script>
+</body>
+
+</html>

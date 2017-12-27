@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        #BOX {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .box {
+            width: 900px;
+            height: 600px;
+            margin: 50px auto;
+            background-color: #666;
+            text-align: center;
+            line-height: 130px;
+        }
+
+        .box .box-1 {
+            width: 500px;
+            height: 130px;
+            background-color: red;
+            margin: 0 auto;
+            margin-bottom: 10px;
+        }
+
+        .box .box-2 {
+            width: 500px;
+            height: 130px;
+            background-color: green;
+            margin: 0 auto;
+            margin-bottom: 10px;
+        }
+
+        .box .box-3 {
+            width: 500px;
+            height: 130px;
+            background-color: orange;
+            margin: 0 auto;
+            margin-bottom: 10px;
+        }
+
+        .box .box-4 {
+            width: 500px;
+            height: 130px;
+            background-color: blue;
+            margin: 0 auto;
+            margin-bottom: 10px;
+        }
+
+        .lists {
+            position: absolute;
+            top: 500px;
+            left: 30px;
+        }
+
+        .lists li {
+            float: left;
+            display: none;
+            cursor: pointer;
+        }
+
+        .bomb-Box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            text-align: center;
+        }
+
+        .bomb-Box li {
+            display: none;
+        }
+
+        .bomb-Box .bomb-Box-1 {
+            width: 200px;
+            height: 200px;
+            background-color: red;
+            position: absolute;
+            top: 0;
+            left: 10px;
+        }
+
+        .bomb-Box .bomb-Box-2 {
+            width: 200px;
+            height: 200px;
+            background-color: green;
+            position: absolute;
+            top: 100px;
+            left: 30px;
+        }
+
+        .bomb-Box .bomb-Box-3 {
+            width: 200px;
+            height: 200px;
+            background-color: orange;
+            position: absolute;
+            top: 200px;
+            left: 50px;
+        }
+
+        .bomb-Box .bomb-Box-4 {
+            width: 200px;
+            height: 200px;
+            background-color: blue;
+            position: absolute;
+            top: 300px;
+            left: 70px;
+        }
+
+        .bomb-Box span {
+            float: right;
+            margin: 10px;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<div id="BOX">
+    <div class="box">
+        <div class="box-1">
+            <h1>1</h1>
+        </div>
+        <div class="box-2">
+            <h1>2</h1>
+        </div>
+        <div class="box-3">
+            <h1>3</h1>
+        </div>
+        <div class="box-4">
+            <h1>4</h1>
+        </div>
+    </div>
+    <div class="lists">
+        <ul>
+            <li class="lists-1">提示（1）</li>
+            <li class="lists-2">提示（2）</li>
+            <li class="lists-3">提示（3）</li>
+            <li class="lists-4">提示（4）</li>
+        </ul>
+    </div>
+    <div class="bomb-Box">
+        <ul>
+            <li class="bomb-Box-1">弹框（1）<span class="close-1">X</span></li>
+            <li class="bomb-Box-2">弹框（2）<span class="close-2">X</span></li>
+            <li class="bomb-Box-3">弹框（3）<span class="close-3">X</span></li>
+            <li class="bomb-Box-4">弹框（4）<span class="close-4">X</span></li>
+        </ul>
+    </div>
+</div>
+
+<body>
+    <script src='./jquery/dist/jquery.min.js'></script>
+    <script>
+        var $box = $('.box div'),
+            $lists = $('.lists li'),
+            $bomb_lis = $('.bomb-Box li'),
+            $spans = $('span');
+
+        for (var i = 0; i < $box.length; i++) {
+            $box.eq(i).attr('index', i)
+
+            // 点击主题显示对应的弹框和提示信息
+            $box.eq(i).on('click', function () {
+                var index = $(this).attr('index');
+                $bomb_lis.eq(index).show();
+                $lists.eq(index).show();
+            })
+
+            // 点击 X 显示对应的弹框和提示信息
+            $spans.eq(i).attr('index-span', i)
+            $spans.eq(i).on('click', function () {
+                var index = $(this).attr('index-span');
+                $bomb_lis.eq(index).hide();
+                $lists.eq(index).hide();
+            })
+
+            // 点提示隐藏对应的提示
+            $lists.eq(i).attr('index-li', i)
+            $lists.eq(i).on('click', function () {
+                var index = $(this).attr('index-li');
+                $bomb_lis.eq(index).fadeToggle(100);
+            })
+
+
+            //  点哪个那个层级最高
+            $bomb_lis.eq(i).attr('index-lis', i)
+            var Zindex = 0;
+            $bomb_lis.eq(i).on('click', function () {
+                Zindex++;
+                $(this).css('z-index', Zindex)
+            })
+        }
+    </script>
+</body>
+
+</html>
